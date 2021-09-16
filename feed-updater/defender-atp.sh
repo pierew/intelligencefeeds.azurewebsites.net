@@ -2,7 +2,7 @@
 
 # Variables
 URL="https://download.microsoft.com/download/8/a/5/8a51eee5-cd02-431c-9d78-a58b7f77c070/mde-urls.xlsx"
-HTTPD="/var/www/localhost/htdocs"
+HTTPD="/var/www/localhost/htdocs/feeds/ms_defender_atp"
 
 mkdir /tmp/defender-atp/work -p
 cd /tmp/defender-atp
