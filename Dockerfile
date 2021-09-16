@@ -1,5 +1,8 @@
 FROM alpine:latest
 
+LABEL org.opencontainers.image.authors="dev@pierewoehl.de"
+LABEL org.opencontainers.image.source="https://github.com/pierew/intelligencefeeds.azurewebsites.net"
+
 RUN apk add --no-cache python3 py3-pip lighttpd bash
 RUN pip install xlsx2csv
 
