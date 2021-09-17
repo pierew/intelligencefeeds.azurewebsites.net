@@ -3,6 +3,9 @@ FROM alpine:latest
 LABEL org.opencontainers.image.authors="dev@pierewoehl.de"
 LABEL org.opencontainers.image.source="https://github.com/pierew/intelligencefeeds.azurewebsites.net"
 
+ENV PORT 80
+EXPOSE 80
+
 RUN apk add --no-cache python3 py3-pip lighttpd bash
 RUN pip install xlsx2csv
 
@@ -14,4 +17,4 @@ RUN chmod +x /etc/periodic/15min/defender-atp.sh
 
 COPY entrypoint.sh entrypoint.sh
 CMD ["/bin/bash","/entrypoint.sh"]
-EXPOSE 80
+
