@@ -15,6 +15,8 @@ COPY config/dir-listing.css /var/www/localhost/htdocs/dir-listing.css
 COPY feed-updater/defender-atp.sh /etc/periodic/15min/defender-atp.sh
 RUN chmod +x /etc/periodic/15min/defender-atp.sh
 
+RUN echo "ok" > /var/www/localhost/htdocs/check
+
 COPY entrypoint.sh entrypoint.sh
 CMD ["/bin/bash","/entrypoint.sh"]
 
