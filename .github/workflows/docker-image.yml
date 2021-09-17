@@ -27,3 +27,7 @@ jobs:
         
     - name: Push Image
       run: docker push ghcr.io/${{ github.repository }}:latest
+
+    - name: Deployment on Azure App Service
+      run: curl https://\${{ secrets.AZURE_APP_SERVICE_WEBHOOK }}@intelligencefeeds.scm.azurewebsites.net/docker/hook -H "" -d ""
+
