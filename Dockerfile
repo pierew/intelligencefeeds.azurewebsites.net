@@ -14,3 +14,4 @@ RUN chmod +x /etc/periodic/15min/defender-atp.sh
 
 COPY entrypoint.sh entrypoint.sh
 CMD ["/bin/bash","/entrypoint.sh"]
+EXPOSE 80
