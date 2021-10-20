@@ -4,8 +4,8 @@
 URL="https://download.microsoft.com/download/8/a/5/8a51eee5-cd02-431c-9d78-a58b7f77c070/mde-urls.xlsx"
 HTTPD="/var/www/localhost/htdocs/feeds/defender"
 
-mkdir /tmp/defender-atp/ -p
-cd /tmp/defender-atp
+mkdir /tmp/defender/ -p
+cd /tmp/defender
 rm -rf $HTTPD/government/ $HTTPD/region-* $HTTPD/combined.txt
 wget $URL -O ./mde-urls.xlsx
 xlsx2csv -a ./mde-urls.xlsx .
@@ -36,6 +36,10 @@ function pars_categories {
 
     "Reporting"*)
     echo "reporting-and-notifications"
+    ;;
+
+    *)
+    echo $value
     ;;
 
     esac
@@ -81,5 +85,5 @@ do
     echo $endpoint >> "$HTTPD/combined.txt"
 done < <(cut -d "," -f2,3 ./Security\ Center\ URLs\ -\ US\ Gov.csv | tail -n +2)
 
-rm -rf /tmp/defender_atp
+rm -rf /tmp/defender
 
