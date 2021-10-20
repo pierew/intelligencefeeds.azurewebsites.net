@@ -29,14 +29,38 @@ do
     
 done < <(tail -n +2 intune-management-endpoints.csv)
 
-cat ./url-management.txt | tr " " "\n" | sed '/^$/d' > /$HTTPD/url/management.txt
-cat ./ipv4-management.txt | tr " " "\n" | sed '/^$/d' > /$HTTPD/ipv4/management.txt
+cat ./url-management.txt | tr " " "\n" | sed '/^$/d' > $HTTPD/url/management.txt
+cat ./ipv4-management.txt | tr " " "\n" | sed '/^$/d' > $HTTPD/ipv4/management.txt
 
 # Generate Script lists
 while IFS="," read -r azure_storage_unit storage_name cdn
 do
     echo $cdn >> ./url-powershell_and_win32.txt
 done < <(tail -n +2 intune-scripts.csv)
-cat ./url-powershell_and_win32.txt | tr " " "\n" | sed '/^$/d' > /$HTTPD/url/powershell_and_win32.txt
+cat ./url-powershell_and_win32.txt | tr " " "\n" | sed '/^$/d' > /$HTTPD/url/powershell.txt
+
+# Generate JSONs
+
+echo '{' > $HTTPD/feed.json
+echo '  "description": "Microsoft Intune Endpoints (URL and IPv4)",' >> $HTTPD/feed.json
+echo '  "result": [' >> $HTTPD/feed.json
+
+for item in $(cat $HTTPD/url/management.txt)
+do
+    jq -n --arg type "url" --arg category "management" --arg url "$item" '{type: $type, category: $category , url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+done
+
+for item in $(cat $HTTPD/url/powershell.txt)
+do
+    jq -n --arg type "url" --arg category "powershell" --arg url "$item" '{type: $type, category: $category , url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+done
+
+for item in $(cat $HTTPD/ipv4/management.txt)
+do
+    jq -n --arg type "ipv4" --arg category "management" --arg ip "$item" '{type: $type, category: $category , ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+done
+
+echo '  ]' >> $HTTPD/feed.json
+echo '}' >> $HTTPD/feed.json
 
 rm -rf /tmp/intune
