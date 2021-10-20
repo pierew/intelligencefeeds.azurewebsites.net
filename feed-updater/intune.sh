@@ -60,6 +60,8 @@ do
     jq -n --arg type "IPv4" --arg category "management" --arg ip "$item" '{type: $type, category: $category , ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
 done
 
+sed -i '$d' $HTTPD/feed.json
+echo '    }' >> $HTTPD/feed.json
 echo '  ]' >> $HTTPD/feed.json
 echo '}' >> $HTTPD/feed.json
 

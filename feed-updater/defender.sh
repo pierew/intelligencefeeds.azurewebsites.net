@@ -93,6 +93,8 @@ do
     
 done < <(cut -d "," -f2,3 ./Security\ Center\ URLs\ -\ US\ Gov.csv | tail -n +2)
 
+sed -i '$d' $HTTPD/feed.json
+echo '    }' >> $HTTPD/feed.json
 echo '  ]' >> $HTTPD/feed.json
 echo '}' >> $HTTPD/feed.json
 
