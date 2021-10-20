@@ -11,7 +11,5 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Webhook for CD on Azure App Service - intelligencefeeds
-        run: curl https://\${{ secrets.AZURE_APP_SERVICE_WEBHOOK }}@intelligencefeeds.scm.azurewebsites.net/docker/hook -H "" -d ""
       - name: Trigger Webhook for CD on Azure App Service - serviceendpoints
-        run: curl https://\${{ secrets.AZURE_APP_SERVICE_WEBHOOK_2 }}@serviceendpoints.scm.azurewebsites.net/docker/hook -H "" -d ""
+        run: curl https://\${{ secrets.AZURE_APP_SERVICE_WEBHOOK }}@serviceendpoints.scm.azurewebsites.net/docker/hook -H "" -d ""
