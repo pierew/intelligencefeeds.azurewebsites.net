@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 LABEL org.opencontainers.image.authors="dev@pierewoehl.de"
-LABEL org.opencontainers.image.source="https://github.com/pierew/intelligencefeeds.azurewebsites.net"
+LABEL org.opencontainers.image.source="https://github.com/pierew/serviceendpoints.azurewebsites.net"
 
 ENV PORT 80
 EXPOSE 80
