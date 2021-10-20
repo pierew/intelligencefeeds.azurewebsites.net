@@ -47,17 +47,17 @@ echo '  "result": [' >> $HTTPD/feed.json
 
 for item in $(cat $HTTPD/url/management.txt)
 do
-    jq -n --arg type "url" --arg category "management" --arg url "$item" '{type: $type, category: $category , url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+    jq -n --arg type "URL" --arg category "management" --arg url "$item" '{type: $type, category: $category , url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
 done
 
 for item in $(cat $HTTPD/url/powershell.txt)
 do
-    jq -n --arg type "url" --arg category "powershell" --arg url "$item" '{type: $type, category: $category , url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+    jq -n --arg type "URL" --arg category "powershell" --arg url "$item" '{type: $type, category: $category , url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
 done
 
 for item in $(cat $HTTPD/ipv4/management.txt)
 do
-    jq -n --arg type "ipv4" --arg category "management" --arg ip "$item" '{type: $type, category: $category , ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+    jq -n --arg type "IPv4" --arg category "management" --arg ip "$item" '{type: $type, category: $category , ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
 done
 
 echo '  ]' >> $HTTPD/feed.json

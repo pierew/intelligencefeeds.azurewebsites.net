@@ -58,7 +58,7 @@ do
     FOLDERNAME="region-$(echo $region | tr '[:upper:]' '[:lower:]' | tr -d '[:blank:]')"
     mkdir $HTTPD/$FOLDERNAME -p
     echo $endpoint >> "$HTTPD/$FOLDERNAME/$category".txt
-    jq -n --arg type "url" --arg category "$category" --arg serviceRegion "$region" --arg serviceArea "public" --arg url "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+    jq -n --arg type "URL" --arg category "$category" --arg serviceRegion "$region" --arg serviceArea "public" --arg url "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
     
 done < <(cut -d "," -f2,3,5 ./Microsoft\ Defender\ URLs.csv | tail -n +5)
 
@@ -69,7 +69,7 @@ do
     FOLDERNAME="government/$(echo $region | tr '[:upper:]' '[:lower:]' | tr -d '[:blank:]')"
     mkdir $HTTPD/$FOLDERNAME -p
     echo $endpoint >> "$HTTPD/$FOLDERNAME/$category".txt
-    jq -n --arg type "url" --arg category "$category" --arg serviceRegion "$region" --arg serviceArea "government" --arg url "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+    jq -n --arg type "URL" --arg category "$category" --arg serviceRegion "$region" --arg serviceArea "government" --arg url "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
     
 done < <(cut -d "," -f2,3,5 ./Microsoft\ Defender\ URLs\ -\ USGov.csv | tail -n +5)
 
@@ -79,7 +79,7 @@ do
     FOLDERNAME="region-ww"
     mkdir $HTTPD/$FOLDERNAME -p
     echo $endpoint | sed 's/https:\/\///' >> "$HTTPD/$FOLDERNAME/security-center.txt"
-    jq -n --arg type "url" --arg category "security-center" --arg serviceRegion "$region" --arg serviceArea "public" --arg url "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, url: $url}' | sed 's/https:\/\///' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+    jq -n --arg type "URL" --arg category "security-center" --arg serviceRegion "$region" --arg serviceArea "public" --arg url "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, url: $url}' | sed 's/https:\/\///' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
     
 done < <(cut -d "," -f3 ./Security\ Center\ URLs.csv | tail -n +2)
 
@@ -89,7 +89,7 @@ do
     FOLDERNAME="government/$(echo $region | tr '[:upper:]' '[:lower:]' | tr -d '[:blank:]')"
     mkdir $HTTPD/$FOLDERNAME -p
     echo $endpoint | sed 's/https:\/\///' >> "$HTTPD/$FOLDERNAME/security-center.txt"
-    jq -n --arg type "url" --arg category "security-center" --arg serviceRegion "$region" --arg serviceArea "government" --arg url "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, url: $url}' | sed 's/https:\/\///' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+    jq -n --arg type "URL" --arg category "security-center" --arg serviceRegion "$region" --arg serviceArea "government" --arg url "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, url: $url}' | sed 's/https:\/\///' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
     
 done < <(cut -d "," -f2,3 ./Security\ Center\ URLs\ -\ US\ Gov.csv | tail -n +2)
 
