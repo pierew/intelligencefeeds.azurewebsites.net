@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.source="https://github.com/pierew/serviceendpoint
 ENV PORT 80
 EXPOSE 80
 
-RUN apk add --no-cache python3 py3-pip lighttpd bash git jq
+RUN apk add --no-cache bind-tools python3 py3-pip lighttpd bash git jq
 RUN pip install xlsx2csv
 
 RUN git clone https://github.com/tomroy/mdtable2csv.git /opt/mdtable2csv

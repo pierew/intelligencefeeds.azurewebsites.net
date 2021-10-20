@@ -48,11 +48,27 @@ echo '  "result": [' >> $HTTPD/feed.json
 for item in $(cat $HTTPD/url/management.txt)
 do
     jq -n --arg type "URL" --arg category "management" --arg url "$item" '{type: $type, category: $category , url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+
+    if [[ "$item" != *"*"* ]]
+    then
+        for ip in $(host -t a $item | grep "has address" | cut -d" " -f4)
+        do
+            jq -n --arg type "IPv4" --arg category "management" --arg ip "$ip" '{type: $type, category: $category , ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+        done
+    fi
 done
 
 for item in $(cat $HTTPD/url/powershell.txt)
 do
     jq -n --arg type "URL" --arg category "powershell" --arg url "$item" '{type: $type, category: $category , url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+    
+    if [[ "$item" != *"*"* ]]
+    then
+        for ip in $(host -t a $item | grep "has address" | cut -d" " -f4)
+        do
+            jq -n --arg type "IPv4" --arg category "powershell" --arg ip "$ip" '{type: $type, category: $category , ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+        done
+    fi
 done
 
 for item in $(cat $HTTPD/ipv4/management.txt)

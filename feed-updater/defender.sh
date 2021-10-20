@@ -59,7 +59,14 @@ do
     mkdir $HTTPD/$FOLDERNAME -p
     echo $endpoint >> "$HTTPD/$FOLDERNAME/$category".txt
     jq -n --arg type "URL" --arg category "$category" --arg serviceRegion "$region" --arg serviceArea "public" --arg url "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
-    
+
+    if [[ "$endpoint" != *"*"* ]]
+    then
+        for ip in $(host -t a $endpoint | grep "has address" | cut -d" " -f4)
+        do
+            jq -n --arg type "IPv4" --arg category "$category" --arg serviceRegion "$region" --arg serviceArea "public" --arg ip "$ip" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+        done
+    fi
 done < <(cut -d "," -f2,3,5 ./Microsoft\ Defender\ URLs.csv | tail -n +5)
 
 # Microsoft Defender for Endpoint URLs US Gov
@@ -70,7 +77,15 @@ do
     mkdir $HTTPD/$FOLDERNAME -p
     echo $endpoint >> "$HTTPD/$FOLDERNAME/$category".txt
     jq -n --arg type "URL" --arg category "$category" --arg serviceRegion "$region" --arg serviceArea "government" --arg url "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
-    
+
+    if [[ "$endpoint" != *"*"* ]]
+    then
+        for ip in $(host -t a $endpoint | grep "has address" | cut -d" " -f4)
+        do
+            jq -n --arg type "IPv4" --arg category "$category" --arg serviceRegion "$region" --arg serviceArea "government" --arg ip "$ip" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+        done
+    fi
+
 done < <(cut -d "," -f2,3,5 ./Microsoft\ Defender\ URLs\ -\ USGov.csv | tail -n +5)
 
 # Security Center URLs
@@ -80,7 +95,15 @@ do
     mkdir $HTTPD/$FOLDERNAME -p
     echo $endpoint | sed 's/https:\/\///' >> "$HTTPD/$FOLDERNAME/security-center.txt"
     jq -n --arg type "URL" --arg category "security-center" --arg serviceRegion "$region" --arg serviceArea "public" --arg url "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, url: $url}' | sed 's/https:\/\///' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
-    
+
+    if [[ "$endpoint" != *"*"* ]]
+    then
+        for ip in $(host -t a $endpoint | grep "has address" | cut -d" " -f4)
+        do
+            jq -n --arg type "IPv4" --arg category "security-center" --arg serviceRegion "$region" --arg serviceArea "public" --arg ip "$ip" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+        done
+    fi
+
 done < <(cut -d "," -f3 ./Security\ Center\ URLs.csv | tail -n +2)
 
 # Security Center URLs US Gov
@@ -90,7 +113,15 @@ do
     mkdir $HTTPD/$FOLDERNAME -p
     echo $endpoint | sed 's/https:\/\///' >> "$HTTPD/$FOLDERNAME/security-center.txt"
     jq -n --arg type "URL" --arg category "security-center" --arg serviceRegion "$region" --arg serviceArea "government" --arg url "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, url: $url}' | sed 's/https:\/\///' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
-    
+
+    if [[ "$endpoint" != *"*"* ]]
+    then
+        for ip in $(host -t a $endpoint | grep "has address" | cut -d" " -f4)
+        do
+            jq -n --arg type "IPv4" --arg category "security-center" --arg serviceRegion "$region" --arg serviceArea "government" --arg ip "$ip" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+        done
+    fi
+
 done < <(cut -d "," -f2,3 ./Security\ Center\ URLs\ -\ US\ Gov.csv | tail -n +2)
 
 sed -i '$d' $HTTPD/feed.json
