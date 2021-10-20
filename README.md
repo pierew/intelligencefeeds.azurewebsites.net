@@ -1,1 +1,0 @@
-# intelligencefeeds.azurewebsites.net
