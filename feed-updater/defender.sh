@@ -8,7 +8,10 @@ mkdir /tmp/defender/ -p
 cd /tmp/defender
 rm -rf $HTTPD/government/ $HTTPD/region-* 
 mkdir $HTTPD -p
-wget $URL -O ./mde-urls.xlsx
+wget $URL -O ./mde-urls.xlsx || echo "failure" > /var/www/localhost/htdocs/check.txt
+
+if [[ "$(cat /var/www/localhost/htdocs/check.txt)" == "failure" ]]; then exit ; fi
+
 xlsx2csv -a ./mde-urls.xlsx .
 
 function pars_categories {
@@ -40,7 +43,7 @@ function pars_categories {
     ;;
 
     *)
-    echo $value
+    echo $(echo $value | tr -cd '[:alnum:]._-')
     ;;
 
     esac
@@ -59,9 +62,13 @@ do
     mkdir $HTTPD/$FOLDERNAME -p
     echo $endpoint >> "$HTTPD/$FOLDERNAME/$category".txt
     jq -n --arg type "URL" --arg category "$category" --arg serviceRegion "$region" --arg serviceArea "public" --arg url "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
-
+    
     if [[ "$endpoint" != *"*"* ]]
     then
+        if [[ "$endpoint" != *"://"* ]]
+        then
+            jq -n --arg type "Domain" --arg category "$category" --arg serviceRegion "$region" --arg serviceArea "public" --arg domain "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, domain: $domain}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+        fi
         for ip in $(host -t a $endpoint | grep "has address" | cut -d" " -f4)
         do
             jq -n --arg type "IPv4" --arg category "$category" --arg serviceRegion "$region" --arg serviceArea "public" --arg ip "$ip" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
@@ -80,6 +87,10 @@ do
 
     if [[ "$endpoint" != *"*"* ]]
     then
+        if [[ "$endpoint" != *"://"* ]]
+        then
+            jq -n --arg type "Domain" --arg category "$category" --arg serviceRegion "$region" --arg serviceArea "governemnt" --arg domain "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, domain: $domain}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+        fi
         for ip in $(host -t a $endpoint | grep "has address" | cut -d" " -f4)
         do
             jq -n --arg type "IPv4" --arg category "$category" --arg serviceRegion "$region" --arg serviceArea "government" --arg ip "$ip" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
@@ -98,6 +109,10 @@ do
 
     if [[ "$endpoint" != *"*"* ]]
     then
+        if [[ "$endpoint" != *"://"* ]]
+        then
+            jq -n --arg type "Domain" --arg category "service-center" --arg serviceRegion "$region" --arg serviceArea "public" --arg domain "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, domain: $domain}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+        fi
         for ip in $(host -t a $endpoint | grep "has address" | cut -d" " -f4)
         do
             jq -n --arg type "IPv4" --arg category "security-center" --arg serviceRegion "$region" --arg serviceArea "public" --arg ip "$ip" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
@@ -116,6 +131,10 @@ do
 
     if [[ "$endpoint" != *"*"* ]]
     then
+        if [[ "$endpoint" != *"://"* ]]
+        then
+            jq -n --arg type "Domain" --arg category "service-center" --arg serviceRegion "$region" --arg serviceArea "government" --arg domain "$endpoint" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, domain: $domain}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+        fi
         for ip in $(host -t a $endpoint | grep "has address" | cut -d" " -f4)
         do
             jq -n --arg type "IPv4" --arg category "security-center" --arg serviceRegion "$region" --arg serviceArea "government" --arg ip "$ip" '{type: $type, category: $category, serviceRegion: $serviceRegion, serviceArea: $serviceArea, ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
