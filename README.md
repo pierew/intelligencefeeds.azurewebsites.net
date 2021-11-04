@@ -1,4 +1,11 @@
-# Dockerfile
+# Repository
+
+[![Docker Image CI Stable](https://github.com/pierew/serviceendpoints.azurewebsites.net/actions/workflows/docker-image-stable.yml/badge.svg?branch=stable)](https://github.com/pierew/serviceendpoints.azurewebsites.net/actions/workflows/docker-image-stable.yml)
+
+[![Docker Image CI Testing](https://github.com/pierew/serviceendpoints.azurewebsites.net/actions/workflows/docker-image-testing.yml/badge.svg?branch=master)](https://github.com/pierew/serviceendpoints.azurewebsites.net/actions/workflows/docker-image-testing.yml)
+
+[![Azure App Service CD](https://github.com/pierew/serviceendpoints.azurewebsites.net/actions/workflows/deployment-azure-app-service.yml/badge.svg)](https://github.com/pierew/serviceendpoints.azurewebsites.net/actions/workflows/deployment-azure-app-service.yml)
+## Dockerfile
 ```Dockerfile
 FROM alpine:latest
 
