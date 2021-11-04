@@ -2,6 +2,7 @@
 
 # Variables
 URL="https://raw.githubusercontent.com/MicrosoftDocs/IntuneDocs/master/intune/fundamentals/intune-endpoints.md"
+URL2="https://raw.githubusercontent.com/MicrosoftDocs/memdocs/master/memdocs/configmgr/core/plan-design/network/includes/internet-endpoints-cloud-services.md"
 HTTPD="/var/www/localhost/htdocs/feeds/intune"
 
 mkdir /tmp/intune/ -p
@@ -9,7 +10,11 @@ cd /tmp/intune
 rm -rf $HTTPD/
 mkdir $HTTPD/url -p
 mkdir $HTTPD/ipv4 -p
-wget $URL -O ./intune-endpoints.md
+
+wget $URL -O ./intune-endpoints.md || echo "failure" > /var/www/localhost/htdocs/check.txt
+wget $URL2 -O ./intune-endpoints-cmg.md || echo "failure" > /var/www/localhost/htdocs/check.txt
+
+if [[ "$(cat /var/www/localhost/htdocs/check.txt)" == "failure" ]]; then exit ; fi
 
 # Split File into Categories
 cat ./intune-endpoints.md | awk '/client accesses/,/## Network requirements/' | grep -v "client accesses" | grep -v "## Network requirements" > ./intune-management-endpoints.md
@@ -39,6 +44,12 @@ do
 done < <(tail -n +2 intune-scripts.csv)
 cat ./url-powershell_and_win32.txt | tr " " "\n" | sed '/^$/d' > /$HTTPD/url/powershell.txt
 
+# Generate CMG List
+cat ./intune-endpoints-cmg.md | grep "Azure AD endpoints" | cut -d'|' -f3 | sed -e 's/<br>/ /g' | sed -e 's/`/ /g' | cut -d" " -f3 > $HTTPD/url/cmg.txt
+cat ./intune-endpoints-cmg.md | grep "Azure AD endpoints" | cut -d'|' -f3 | sed -e 's/<br>/ /g' | sed -e 's/`/ /g' | cut -d" " -f6 >> $HTTPD/url/cmg.txt
+cat ./intune-endpoints-cmg.md | grep "Azure AD endpoints" | cut -d'|' -f3 | sed -e 's/<br>/ /g' | sed -e 's/`/ /g' | cut -d" " -f9 >> $HTTPD/url/cmg.txt
+cat ./intune-endpoints-cmg.md | grep "Azure AD endpoints" | cut -d'|' -f4 | sed -e 's/<br>/ /g' | sed -e 's/`/ /g' | cut -d" " -f3 >> $HTTPD/url/cmg.txt
+
 # Generate JSONs
 
 echo '{' > $HTTPD/feed.json
@@ -51,6 +62,7 @@ do
 
     if [[ "$item" != *"*"* ]]
     then
+        jq -n --arg type "Domain" --arg category "management" --arg domain "$item" '{type: $type, category: $category , domain: $domain}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
         for ip in $(host -t a $item | grep "has address" | cut -d" " -f4)
         do
             jq -n --arg type "IPv4" --arg category "management" --arg ip "$ip" '{type: $type, category: $category , ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
@@ -64,6 +76,7 @@ do
     
     if [[ "$item" != *"*"* ]]
     then
+        jq -n --arg type "Domain" --arg category "powershell" --arg domain "$item" '{type: $type, category: $category , domain: $domain}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
         for ip in $(host -t a $item | grep "has address" | cut -d" " -f4)
         do
             jq -n --arg type "IPv4" --arg category "powershell" --arg ip "$ip" '{type: $type, category: $category , ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
@@ -74,6 +87,20 @@ done
 for item in $(cat $HTTPD/ipv4/management.txt)
 do
     jq -n --arg type "IPv4" --arg category "management" --arg ip "$item" '{type: $type, category: $category , ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+done
+
+for item in $(cat $HTTPD/url/cmg.txt)
+do
+    jq -n --arg type "URL" --arg category "cloud-management-gateway" --arg url "$item" '{type: $type, category: $category , url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+    
+    if [[ "$item" != *"*"* ]]
+    then
+        jq -n --arg type "Domain" --arg category "cloud-management-gateway" --arg domain "$item" '{type: $type, category: $category , domain: $domain}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+        for ip in $(host -t a $item | grep "has address" | cut -d" " -f4)
+        do
+            jq -n --arg type "IPv4" --arg category "cloud-management-gateway" --arg ip "$ip" '{type: $type, category: $category , ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/feed.json
+        done
+    fi
 done
 
 sed -i '$d' $HTTPD/feed.json

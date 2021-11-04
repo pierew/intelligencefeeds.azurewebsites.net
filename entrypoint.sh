@@ -1,4 +1,5 @@
 #!/bin/bash
-/etc/periodic/15min/defender.sh
-/etc/periodic/15min/intune.sh
+/etc/periodic/daily/defender.sh
+/etc/periodic/daily/intune.sh
+crond
 lighttpd -f /etc/lighttpd/lighttpd.conf -D

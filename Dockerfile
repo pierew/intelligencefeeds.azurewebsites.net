@@ -17,10 +17,10 @@ COPY config/lighttpd.conf /etc/lighttpd/lighttpd.conf
 COPY config/mime-types.conf /etc/lighttpd/mime-types.conf
 COPY config/dir-listing.css /var/www/localhost/htdocs/dir-listing.css
 
-COPY feed-updater/defender.sh /etc/periodic/15min/defender.sh
-COPY feed-updater/intune.sh /etc/periodic/15min/intune.sh
-RUN chmod +x /etc/periodic/15min/defender.sh
-RUN chmod +x /etc/periodic/15min/intune.sh
+COPY feed-updater/defender.sh /etc/periodic/daily/defender.sh
+COPY feed-updater/intune.sh /etc/periodic/daily/intune.sh
+RUN chmod +x /etc/periodic/daily/defender.sh
+RUN chmod +x /etc/periodic/daily/intune.sh
 
 RUN echo "ok" > /var/www/localhost/htdocs/check.txt
 
