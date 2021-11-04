@@ -1,4 +1,7 @@
-# Dockerfile
+# Repository
+
+[![Docker Image CI Testing](https://github.com/pierew/serviceendpoints.azurewebsites.net/actions/workflows/docker-image-testing.yml/badge.svg?branch=master)](https://github.com/pierew/serviceendpoints.azurewebsites.net/actions/workflows/docker-image-testing.yml)
+## Dockerfile
 ```Dockerfile
 FROM alpine:latest
 
