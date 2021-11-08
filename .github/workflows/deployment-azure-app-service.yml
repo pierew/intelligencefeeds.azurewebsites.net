@@ -14,5 +14,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Webhook for CD on Azure App Service - serviceendpoints
-        if: ${{ github.ref == 'latest' }}
         run: curl https://\${{ secrets.AZURE_APP_SERVICE_WEBHOOK }}@serviceendpoints.scm.azurewebsites.net/docker/hook -H "" -d ""
