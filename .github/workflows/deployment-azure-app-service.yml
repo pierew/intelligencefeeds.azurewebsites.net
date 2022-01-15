@@ -9,6 +9,7 @@ on:
 jobs:
   deployment:
     runs-on: ubuntu-latest
+    if: github.event.registry_package.package.name == 'latest'
     steps:
       - name: Trigger Webhook for CD on Azure App Service - serviceendpoints
         run: curl https://\${{ secrets.AZURE_APP_SERVICE_WEBHOOK }}@serviceendpoints.scm.azurewebsites.net/docker/hook -H "" -d ""
