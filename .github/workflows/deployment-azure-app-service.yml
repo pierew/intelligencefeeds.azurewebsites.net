@@ -6,9 +6,6 @@ on:
     types:
       - updated
       - published
-  schedule:
-    - cron: "0 0 * * *"
-
 jobs:
   deployment:
     runs-on: ubuntu-latest
