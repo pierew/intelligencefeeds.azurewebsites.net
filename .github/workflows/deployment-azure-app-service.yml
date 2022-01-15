@@ -1,0 +1,17 @@
+name: Azure App Service CD
+
+on:
+  workflow_dispatch:
+  registry_package:
+    types:
+      - updated
+      - published
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Webhook for CD on Azure App Service - serviceendpoints
+        run: curl https://\${{ secrets.AZURE_APP_SERVICE_WEBHOOK }}@serviceendpoints.scm.azurewebsites.net/docker/hook -H "" -d ""
