@@ -32,8 +32,8 @@ do
     
 done < <(tail -n +2 intune-management-endpoints.csv)
 
-cat ./url-management.txt | tr " " "\n" | sed '/^$/d' > ./management.txt
-cat ./ipv4-management.txt | tr " " "\n" | sed '/^$/d' > ./management.txt
+cat ./url-management.txt | tr " " "\n" | sed '/^$/d' > ./url-management-filtered.txt
+cat ./ipv4-management.txt | tr " " "\n" | sed '/^$/d' > ./ipv4-management-filtered.txt
 
 # Generate Script lists
 while IFS="," read -r azure_storage_unit storage_name cdn
@@ -54,7 +54,7 @@ echo '{' > $HTTPD/microsoft-endpoint-manager.json
 echo '  "description": "Microsoft Intune Endpoints (URL and IPv4)",' >> $HTTPD/microsoft-endpoint-manager.json
 echo '  "result": [' >> $HTTPD/microsoft-endpoint-manager.json
 
-for item in $(cat ./management.txt)
+for item in $(cat ./url-management-filtered.txt)
 do
     jq -n --arg type "URL" --arg category "management" --arg url "$item" '{type: $type, category: $category , url: $url}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/microsoft-endpoint-manager.json
 
@@ -82,7 +82,7 @@ do
     fi
 done
 
-for item in $(cat ./management.txt)
+for item in $(cat ./ipv4-management-filtered.txt)
 do
     jq -n --arg type "IPv4" --arg category "management" --arg ip "$item" '{type: $type, category: $category , ip: $ip}' | sed 's/}/},/' | sed 's/^/    /' >> $HTTPD/microsoft-endpoint-manager.json
 done
