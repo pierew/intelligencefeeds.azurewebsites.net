@@ -22,6 +22,6 @@ do
             /bin/bash "$script" &
         done
     fi
-    sleep 30
+    sleep 60
 done
 
