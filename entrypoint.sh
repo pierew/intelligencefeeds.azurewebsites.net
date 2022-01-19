@@ -4,24 +4,15 @@ lighttpd -f /etc/lighttpd/lighttpd.conf -D &
 
 cd /app/scripts
 
-echo "=> Initialization"
-for script in *.sh
-do
-    /bin/bash "$script" &
-done
-
-echo "=> Entering Update Loop"
 while true 
 do
-    minute=$(date +%M)
-    if [[ $minute == "00" ]]
-    then
-        echo "=> Performing Update"
-        for script in *.sh
-        do
-            /bin/bash "$script" &
-        done
-    fi
-    sleep 60
+    echo "=> Performing Update"
+    for script in *.sh
+    do
+        /bin/bash "$script" &
+    done
+    
+    echo "=> Waiting 60 minutes for the next run..."
+    sleep 3600
 done
 
